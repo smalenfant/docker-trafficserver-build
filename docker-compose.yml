@@ -1,0 +1,10 @@
+---
+version: '2'
+
+services:
+  ts7:
+    #image: trafficserver:el7
+    build: el7
+    volumes:
+      - .:/rpmbuild
+    command: rpmbuild -bb SPECS/trafficserver-7.1.1.spec
