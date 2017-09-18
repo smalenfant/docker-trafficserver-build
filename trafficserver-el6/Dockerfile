@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:6
 
 RUN yum update -y && yum clean all
 
@@ -6,7 +6,9 @@ RUN yum install -y install git autoconf automake libtool gcc gcc-c++ pkgconfig p
 
 RUN yum install -y libcap libcap-devel hwloc hwloc-devel ncurses-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker && yum clean all
 
-RUN yum install -y make
+RUN yum install -y make centos-release-scl sudo && yum clean all
+
+RUN yum install -y devtoolset-3-gcc-c++ && yum clean all
 
 RUN useradd builder -u 1000 -m -G users,wheel && \
     echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
@@ -17,12 +19,14 @@ RUN useradd builder -u 1000 -m -G users,wheel && \
     echo "%_specdir   %{_topdir}/SPECS"        >> /home/builder/.rpmmacros && \
     echo "%_rpmdir    %{_topdir}/RPMS"        >> /home/builder/.rpmmacros && \
     echo "%_srcrpmdir %{_topdir}/SRPMS"        >> /home/builder/.rpmmacros && \
-    mkdir /home/builder/rpm && \
+    mkdir /home/builder/rpmbuild && \
     chown -R builder /home/builder
+
 USER builder
-#WORKDIR /rpmbuild
 
-ENV FLAVOR=rpmbuild OS=centos DIST=el7
+WORKDIR /home/builder/rpmbuild
 
-#CMD /srv/pkg
+ENV FLAVOR=rpmbuild OS=centos DIST=el6
+
+CMD scl enable devtoolset-3 bash
 

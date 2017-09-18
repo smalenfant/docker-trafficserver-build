@@ -2,9 +2,17 @@
 version: '2'
 
 services:
-  ts7:
-    #image: trafficserver:el7
-    build: el7
+  trafficserver-el7:
+    build: trafficserver-el7
+    image: trafficserver:el7
     volumes:
       - .:/rpmbuild
-    command: rpmbuild -bb SPECS/trafficserver-7.1.1.spec
+    command: rpmbuild -bb SPECS/trafficserver-6.2.2.spec
+
+  trafficserver-el6:
+    build: trafficserver-el6
+    volumes:
+      - ./rpmbuild:/home/builder/rpmbuild
+    command: rpmbuild -bb SPECS/trafficserver-6.2.2.spec
+
+

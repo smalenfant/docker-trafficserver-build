@@ -18,7 +18,6 @@
 
 %global install_prefix "/opt"
 
-
 Name:		trafficserver
 Version:	6.2.2
 Release:	8182%{?dist}
@@ -26,12 +25,13 @@ Summary:	Apache Traffic Server
 Vendor:		Comcast
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
-URL:		https://github.com/apache/trafficserver/tree/6.2.x
+URL:		https://github.com/apache/trafficserver/tree/6.2.2-astats
 Epoch:          7079
-#Source0:        %{name}-%{version}.tar.bz2
+Source0:        %{name}-%{version}.tar.bz2
 Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
+Patch1:         astats_over_http-1.3-6.2.2.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 BuildRequires:	autoconf, automake, libtool, gcc-c++, glibc-devel, openssl-devel, expat-devel, pcre, libcap-devel, pcre-devel, perl-ExtUtils-MakeMaker, tcl-devel, hwloc-devel
@@ -52,20 +52,15 @@ Requires(postun): initscripts
 Apache Traffic Server with Comcast modifications and environment specific modifications
 
 %prep
-rm -rf %{name}
-git clone --branch 6.2.2 https://github.com/apache/trafficserver.git
-cd trafficserver
-#git checkout tags/6.2.2
-#git checkout %{commit} .
-#wget https://raw.githubusercontent.com/apache/incubator-trafficcontrol/master/traffic_server/plugins/astats_over_http/astats_over_http.c -o 
-cd ..
-#mv trafficserver %{name}
-#rm -rf trafficserver
-%setup -D -n %{name} -T
-autoreconf -vfi
+#rm -rf %{name}-%{version}
+#git clone --branch 6.2.2-astats https://github.com/smalenfant/trafficserver.git
+#git clone --branch 6.2.2 https://github.com/apache/trafficserver.git
 
-#%setup
-#%patch -p1
+#%setup -D -n %{name} -T
+%setup
+%patch -p1
+%patch -p2
+autoreconf -vfi
 
 %build
 ./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins

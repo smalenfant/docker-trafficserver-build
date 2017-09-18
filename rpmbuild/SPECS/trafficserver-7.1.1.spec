@@ -21,18 +21,18 @@
 
 Name:		trafficserver
 Version:	7.1.1
-Release:	9422%{?dist}
+Release:	9440%{?dist}
 Summary:	Apache Traffic Server
 Vendor:		Comcast
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
-URL:		https://github.com/apache/trafficserver/tree/7.1.x
+URL:		https://github.com/apache/trafficserver
 Epoch:          7111
-#Source0:        %{name}-%{version}.tar.bz2
+Source0:        %{name}-%{version}.tar.bz2
 Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
-Source4:        astats_over_http-1.3.tar.gz
+Patch1:         astats_over_http-1.3-7.1.x.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 BuildRequires:	autoconf, automake, libtool, gcc-c++, glibc-devel, openssl-devel, expat-devel, pcre, libcap-devel, pcre-devel, perl-ExtUtils-MakeMaker, tcl-devel, hwloc-devel
@@ -53,22 +53,15 @@ Requires(postun): initscripts
 Apache Traffic Server with Comcast modifications and environment specific modifications
 
 %prep
-rm -rf %{name}
-git clone -b 7.1.x https://github.com/apache/trafficserver.git
+#rm -rf %{name}-%{vervion}
+#git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
 
-# Extract astats_over_http
-cd trafficserver/plugins/experimental
-tar xvfz %{SOURCE4}
-cd ../../../
-
-#mv trafficserver %{name}
-#rm -rf trafficserver
-
-%setup -D -n %{name} -T
+#%setup -D -n %{name} -T
+%setup
+%patch -p1
 autoreconf -vfi
 
 #%setup
-#%patch -p1
 
 %build
 ./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins
