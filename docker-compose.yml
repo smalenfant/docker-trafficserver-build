@@ -5,6 +5,7 @@ services:
   trafficserver:
     build: trafficserver-${CENTOS_VERSION}
     image: trafficserver:${CENTOS_VERSION}
+    container_name: trafficserver-${CENTOS_VERSION}-${TS_VERSION}
     volumes:
       - ${PWD}/rpmbuild:/home/builder/rpmbuild:rw
     command: ['rpmbuild', '-bb' ,'SPECS/trafficserver-${TS_VERSION}.spec']

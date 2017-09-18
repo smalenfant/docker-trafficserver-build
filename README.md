@@ -16,12 +16,16 @@ http://archive.apache.org/dist/trafficserver/
 
 - Start the build container
 
-`docker-compose up trafficserver-el7`
+```
+CENTOS_VERSION=el6 TS_VERSION=6.2.2 docker-compose up trafficserver
+CENTOS_VERSION=el7 TS_VERSION=7.1.1 docker-compose up trafficserver
+```
 
+The RPMS should be in the `rpmbuild/RPMS/x86_64` 
 
-## Notes
+## Patches
 
-- Please remove the `location` parameter in Traffic Ops, as astats_over_http is built-in.
-- test rpmbuild --undefine=_disable_source_fetch
+To create traffic server patches, the following was executed from `https://github.com/smalenfant/trafficserver.git`
+
 - `git diff 0b7b630858b4983d077a63074776abdfa48778f8 6.2.2-astats -- plugins/ configure.ac > ../docker-trafficserver-build/rpmbuild/SOURCES/astats_over_http-1.3-6.2.x.patch`
-
+- `git diff 6f6a04aae105291c774d0c4116597fdc7b345121 7.1.1-astats -- plugins/ ../docker-trafficserver-build/rpmbuild/SOURCES/astats_over_http-1.3-7.1.x.patch`
