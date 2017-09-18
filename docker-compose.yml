@@ -2,17 +2,18 @@
 version: '2'
 
 services:
-  trafficserver-el7:
-    build: trafficserver-el7
-    image: trafficserver:el7
+  trafficserver-${CENTOS_VERSION}:
+    build: trafficserver-${CENTOS_VERSION}
+    image: trafficserver:${CENTOS_VERSION}
     volumes:
       - .:/rpmbuild
-    command: rpmbuild -bb SPECS/trafficserver-6.2.2.spec
+    command: rpmbuild -bb SPECS/trafficserver-${TS_VERSION}.spec
 
-  trafficserver-el6:
-    build: trafficserver-el6
-    volumes:
-      - ./rpmbuild:/home/builder/rpmbuild
-    command: rpmbuild -bb SPECS/trafficserver-6.2.2.spec
+  #trafficserver-el6:
+  #  build: trafficserver-el6
+  #  image: trafficserver-el6
+  #  volumes:
+  #    - ./rpmbuild:/home/builder/rpmbuild
+  #  command: rpmbuild -bb SPECS/trafficserver-6.2.2.spec
 
 

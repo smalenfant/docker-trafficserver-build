@@ -1,18 +1,15 @@
 diff --git a/configure.ac b/configure.ac
-index 23d295a14..6150ab7bc 100644
+index 23d295a14..2edb4aaf3 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -32,8 +32,8 @@
- # Version number is calculated as MAJOR * 1000000 + MINOR * 1000 + MICRO
- # Version string is in the form of MAJOR.MINOR.MICRO[sufix]
- #
--m4_define([TS_VERSION_S],[6.2.2])
--m4_define([TS_VERSION_N],[6002002])
-+m4_define([TS_VERSION_S],[6.2.3])
-+m4_define([TS_VERSION_N],[6002003])
- 
- AC_INIT([Apache Traffic Server], TS_VERSION_S(), [dev@trafficserver.apache.org], [trafficserver],[http://trafficserver.apache.org])
- AC_PREREQ([2.59])
+@@ -1967,6 +1967,7 @@ AC_CONFIG_FILES([
+   plugins/conf_remap/Makefile
+   plugins/experimental/Makefile
+   plugins/experimental/acme/Makefile
++  plugins/experimental/astats_over_http/Makefile
+   plugins/experimental/authproxy/Makefile
+   plugins/experimental/background_fetch/Makefile
+   plugins/experimental/balancer/Makefile
 diff --git a/plugins/experimental/Makefile.am b/plugins/experimental/Makefile.am
 index a530a382f..6d182ca48 100644
 --- a/plugins/experimental/Makefile.am

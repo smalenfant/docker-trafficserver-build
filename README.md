@@ -6,13 +6,17 @@ This is to provide some help to build Traffic Server using docker.
 
 ## Instructions
 
-- Clone the repository
+- Clone this repository
 
-`TODO`
+`git clone https://github.com/smalenfant/docker-trafficserver-build.git`
 
 - Download the required Traffic Server version in the SOURCE directory
 
 http://archive.apache.org/dist/trafficserver/
+
+- Start the build container
+
+`docker-compose up trafficserver-el7`
 
 
 ## Notes
