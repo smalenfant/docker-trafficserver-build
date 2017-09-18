@@ -25,13 +25,13 @@ Summary:	Apache Traffic Server
 Vendor:		Comcast
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
-URL:		https://github.com/apache/trafficserver/tree/6.2.2-astats
+URL:		https://github.com/apache/trafficserver
 Epoch:          7079
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
-Patch1:         astats_over_http-1.3-6.2.2.patch
+Patch:          astats_over_http-1.3-6.2.x.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 BuildRequires:	autoconf, automake, libtool, gcc-c++, glibc-devel, openssl-devel, expat-devel, pcre, libcap-devel, pcre-devel, perl-ExtUtils-MakeMaker, tcl-devel, hwloc-devel
@@ -52,14 +52,13 @@ Requires(postun): initscripts
 Apache Traffic Server with Comcast modifications and environment specific modifications
 
 %prep
-#rm -rf %{name}-%{version}
+rm -rf %{name}-%{version}
 #git clone --branch 6.2.2-astats https://github.com/smalenfant/trafficserver.git
 #git clone --branch 6.2.2 https://github.com/apache/trafficserver.git
 
 #%setup -D -n %{name} -T
 %setup
 %patch -p1
-%patch -p2
 autoreconf -vfi
 
 %build

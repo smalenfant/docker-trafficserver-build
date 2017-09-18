@@ -32,7 +32,7 @@ Source0:        %{name}-%{version}.tar.bz2
 Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
-Patch1:         astats_over_http-1.3-7.1.x.patch
+Patch:          astats_over_http-1.3-7.1.x.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 BuildRequires:	autoconf, automake, libtool, gcc-c++, glibc-devel, openssl-devel, expat-devel, pcre, libcap-devel, pcre-devel, perl-ExtUtils-MakeMaker, tcl-devel, hwloc-devel
@@ -53,7 +53,7 @@ Requires(postun): initscripts
 Apache Traffic Server with Comcast modifications and environment specific modifications
 
 %prep
-#rm -rf %{name}-%{vervion}
+rm -rf %{name}-%{vervion}
 #git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
 
 #%setup -D -n %{name} -T
