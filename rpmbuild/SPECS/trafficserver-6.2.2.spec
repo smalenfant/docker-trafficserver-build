@@ -1,28 +1,9 @@
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-
 %global install_prefix "/opt"
 
 Name:		trafficserver
 Version:	6.2.2
 Release:	8182%{?dist}
 Summary:	Apache Traffic Server
-Vendor:		Comcast
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
@@ -49,7 +30,7 @@ Requires(postun): initscripts
 %endif
 
 %description
-Apache Traffic Server with Comcast modifications and environment specific modifications
+Apache Traffic Server for Traffic Control with astats_over_http plugin
 
 %prep
 rm -rf %{name}-%{version}
@@ -83,8 +64,8 @@ install -D -m 0644 -p %{SOURCE1} \
 install -D -m 0644 -p %{SOURCE3} \
    %{buildroot}%{_sysconfdir}/tmpfiles.d/trafficserver.conf
 %else
-mv %{buildroot}/usr/bin/trafficserver %{buildroot}/etc/init.d
 mkdir -p %{buildroot}/etc/init.d/
+cp $RPM_BUILD_DIR/%{name}-%{version}/rc/trafficserver %{buildroot}/etc/init.d
 %endif
 
 mkdir -p $RPM_BUILD_ROOT%{install_prefix}/trafficserver/etc/trafficserver/snapshots

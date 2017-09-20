@@ -2,9 +2,16 @@ FROM centos:7
 
 RUN yum update -y && yum clean all
 
-RUN yum install -y make install git autoconf automake libtool gcc gcc-c++ pkgconfig pcre-devel tcl-devel expat-devel openssl-devel && yum clean all
+#RUN yum install -y make install git autoconf automake libtool gcc gcc-c++ pkgconfig pcre-devel tcl-devel expat-devel openssl-devel && yum clean all
 
-RUN yum install -y libcap libcap-devel hwloc hwloc-devel ncurses-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker && yum clean all
+RUN yum install -y --setopt=tsflags=nodocs \
+                install git autoconf automake libtool gcc gcc-c++ \
+                pkgconfig pcre-devel tcl-devel expat-devel openssl-devel \
+                libcap libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker \
+                make centos-release-scl sudo \
+                && yum clean all
+
+#RUN yum install -y libcap libcap-devel hwloc hwloc-devel ncurses-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker && yum clean all
 
 RUN useradd builder -u 1000 -m -G users,wheel && \
     echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
