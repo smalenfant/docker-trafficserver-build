@@ -1,8 +1,4 @@
-FROM centos:7
-
-RUN yum update -y && yum clean all
-
-#RUN yum install -y make install git autoconf automake libtool gcc gcc-c++ pkgconfig pcre-devel tcl-devel expat-devel openssl-devel && yum clean all
+FROM centos:7.5.1804
 
 RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \

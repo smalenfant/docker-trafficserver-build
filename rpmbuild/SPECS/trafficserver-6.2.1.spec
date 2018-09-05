@@ -1,8 +1,8 @@
 %global install_prefix "/opt"
 
 Name:		trafficserver
-Version:	6.2.2
-Release:	8183%{?dist}
+Version:	6.2.1
+Release:	8182%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0

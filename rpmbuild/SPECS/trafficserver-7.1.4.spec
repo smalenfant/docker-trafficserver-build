@@ -1,18 +1,18 @@
 %global install_prefix "/opt"
 
 Name:		trafficserver
-Version:	6.2.2
-Release:	8183%{?dist}
+Version:	7.1.4
+Release:	9440%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          7079
+Epoch:          7114
 Source0:        %{name}-%{version}.tar.bz2
 Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
-#Patch:          astats_over_http-1.3-6.2.x.patch
+Patch:          astats_over_http-1.3-7.1.x.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 BuildRequires:	autoconf, automake, libtool, gcc-c++, glibc-devel, openssl-devel, expat-devel, pcre, libcap-devel, pcre-devel, perl-ExtUtils-MakeMaker, tcl-devel, hwloc-devel
@@ -30,17 +30,18 @@ Requires(postun): initscripts
 %endif
 
 %description
-Apache Traffic Server for Traffic Control with astats_over_http plugin
+Apache Traffic Server for Traffic Control with astats_over_http plugin 
 
 %prep
 rm -rf %{name}-%{version}
-#git clone --branch 6.2.2-astats https://github.com/smalenfant/trafficserver.git
-#git clone --branch 6.2.2 https://github.com/apache/trafficserver.git
+#git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
 
 #%setup -D -n %{name} -T
 %setup
-#%patch -p1
+%patch -p1
 autoreconf -vfi
+
+#%setup
 
 %build
 ./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins
@@ -51,12 +52,11 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
 # Remove duplicate man-pages:
-rm -rf %{buildroot}%{_docdir}/trafficserver
+##rm -rf %{buildroot}%{_docdir}/trafficserver
 
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
 install -m 644 -p %{SOURCE2} \
    %{buildroot}%{_sysconfdir}/sysconfig/trafficserver
-
 
 %if %{?fedora}0 > 140 || %{?rhel}0 > 60
 install -D -m 0644 -p %{SOURCE1} \
@@ -78,7 +78,7 @@ getent group ats >/dev/null || groupadd -r ats -g 176 &>/dev/null
 getent passwd ats >/dev/null || \
 useradd -r -u 176 -g ats -d / -s /sbin/nologin \
 	-c "Apache Traffic Server" ats &>/dev/null
-#id ats &>/dev/null || /usr/sbin/useradd -u 176 -r ats -s /sbin/nologin -d /
+id ats &>/dev/null || /usr/sbin/useradd -u 176 -r ats -s /sbin/nologin -d /
 
 %post
 /sbin/ldconfig
@@ -134,7 +134,7 @@ fi
 %config(noreplace) %{_sysconfdir}/sysconfig/trafficserver
 /opt/trafficserver/include
 /opt/trafficserver/lib
-/opt/trafficserver/man
+#/opt/trafficserver/man
 #/opt/trafficserver/lib64
 /opt/trafficserver/libexec
 /opt/trafficserver/share
@@ -151,11 +151,11 @@ fi
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/cluster.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/congestion.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/hosting.config
-%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/icp.config
+# %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/icp.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/ip_allow.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/log_hosts.config
-#%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/logging.config
-%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/logs_xml.config
+%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/logging.config
+#%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/logs_xml.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/metrics.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/parent.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/plugin.config
@@ -169,4 +169,4 @@ fi
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/vaddrs.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/volume.config
 #%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/prefetch.config
-%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/stats.config.xml
+#%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/stats.config.xml
