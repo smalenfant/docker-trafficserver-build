@@ -8,8 +8,5 @@ services:
     container_name: trafficserver-${CENTOS_VERSION}-${TS_VERSION}
     volumes:
       - ${PWD}/rpmbuild:/home/builder/rpmbuild:rw
-    command: ['rpmbuild', '-bb', 'SPECS/trafficserver-${TS_VERSION}.spec']
-    #command: ['enable','devtoolset-3','rpmbuild -bb SPECS/trafficserver-${TS_VERSION}.spec']
-    #command: ['enable','devtoolset-3','gcc --version']
-    #command: ['gcc --version']
+    command: ['/usr/bin/scl','enable','devtoolset-7','rpmbuild -bb SPECS/trafficserver-${TS_VERSION}.spec']
 

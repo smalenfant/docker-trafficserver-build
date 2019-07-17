@@ -1,4 +1,4 @@
-FROM centos:7.5.1804
+FROM centos:7
 
 RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \
@@ -7,7 +7,26 @@ RUN yum install -y --setopt=tsflags=nodocs \
                 make centos-release-scl sudo \
                 && yum clean all
 
-#RUN yum install -y libcap libcap-devel hwloc hwloc-devel ncurses-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker && yum clean all
+# Default version of GCC and Python
+RUN gcc --version && python --version
+
+# Install some developer style software collections with intent to
+# use newer version of GCC and Python than the OS provided
+RUN yum install -y centos-release-scl && yum install -y devtoolset-7 rh-python36
+
+# Yum installed packages but the default OS-provided version is still used.
+RUN gcc --version && python --version
+
+# Okay, change our shell to specifically use our software collections.
+# (default was SHELL [ "/bin/sh", "-c" ])
+# https://docs.docker.com/engine/reference/builder/#shell
+#
+# See also `scl` man page for enabling multiple packages if desired:
+# https://linux.die.net/man/1/scl
+SHELL [ "/usr/bin/scl", "enable", "devtoolset-7", "rh-python36" ]
+
+# Switching to a different shell has brought the new versions into scope.
+RUN gcc --version && python --version
 
 RUN useradd builder -u 1000 -m -G users,wheel && \
     echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers && \
