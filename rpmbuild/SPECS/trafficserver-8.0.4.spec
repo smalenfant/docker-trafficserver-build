@@ -9,7 +9,7 @@ License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
 Epoch:          11210
 Source0:        %{name}-%{version}.tar.bz2
-Source1:        trafficserver.service
+#Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
 Patch:          astats_over_http-1.4-8.0.x.patch
@@ -59,8 +59,10 @@ install -m 644 -p %{SOURCE2} \
    %{buildroot}%{_sysconfdir}/sysconfig/trafficserver
 
 %if %{?fedora}0 > 140 || %{?rhel}0 > 60
-install -D -m 0644 -p %{SOURCE1} \
-   %{buildroot}/lib/systemd/system/trafficserver.service
+#install -D -m 0644 -p %{SOURCE1} \
+#   %{buildroot}/lib/systemd/system/trafficserver.service
+mkdir -p %{buildroot}%{_unitdir}/
+cp $RPM_BUILD_DIR/%{name}-%{version}/rc/trafficserver.service %{buildroot}%{_unitdir}/
 install -D -m 0644 -p %{SOURCE3} \
    %{buildroot}%{_sysconfdir}/tmpfiles.d/trafficserver.conf
 %else
@@ -125,7 +127,7 @@ fi
 #%attr(755,-,-) /etc/init.d/trafficserver
 %dir /opt/trafficserver
 %if %{?fedora}0 > 140 || %{?rhel}0 > 60
-/lib/systemd/system/trafficserver.service
+/usr/lib/systemd/system/trafficserver.service
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/trafficserver.conf
 %else
 /etc/init.d/trafficserver
