@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:7.6.1810
 
 RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \
@@ -12,7 +12,7 @@ RUN gcc --version && python --version
 
 # Install some developer style software collections with intent to
 # use newer version of GCC and Python than the OS provided
-RUN yum install -y centos-release-scl && yum install -y devtoolset-7 rh-python36
+RUN yum install -y centos-release-scl && yum install -y devtoolset-8 rh-python36
 
 # Yum installed packages but the default OS-provided version is still used.
 RUN gcc --version && python --version
@@ -23,7 +23,7 @@ RUN gcc --version && python --version
 #
 # See also `scl` man page for enabling multiple packages if desired:
 # https://linux.die.net/man/1/scl
-SHELL [ "/usr/bin/scl", "enable", "devtoolset-7", "rh-python36" ]
+SHELL [ "/usr/bin/scl", "enable", "devtoolset-8", "rh-python36" ]
 
 # Switching to a different shell has brought the new versions into scope.
 RUN gcc --version && python --version
