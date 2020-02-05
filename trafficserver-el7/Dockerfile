@@ -1,4 +1,4 @@
-FROM centos:7.6.1810
+FROM centos:7
 
 RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \
