@@ -3,10 +3,11 @@ version: '2'
 
 services:
   trafficserver:
-    build: trafficserver-${CENTOS_VERSION}
+    build: trafficserver-${CENTOS_VERSION} 
     image: trafficserver:${CENTOS_VERSION}
     container_name: trafficserver-${CENTOS_VERSION}-${TS_VERSION}
     volumes:
       - ${PWD}/rpmbuild:/home/builder/rpmbuild:rw
-    command: ['/usr/bin/scl','enable','devtoolset-7','rpmbuild -bb SPECS/trafficserver-${TS_VERSION}.spec']
-
+    environment:
+      - TS_VERSION=${TS_VERSION}
+    command: ['rpmbuild','-bb','SPECS/trafficserver-${TS_VERSION}.spec']
