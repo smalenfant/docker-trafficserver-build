@@ -2,12 +2,12 @@
 
 Name:		trafficserver
 Version:	8.0.6
-Release:	11273%{?dist}
+Release:	11283%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          11273
+Epoch:          11283
 Source0:        %{name}-%{version}.tar.bz2
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
