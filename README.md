@@ -33,4 +33,6 @@ To create traffic server patches, the following was executed from `https://githu
 
 To create an archive of Traffic Server
 
+Checkout the branch you want to make the archive from and run the following (change the versions to match):
+
 - `git archive --prefix=trafficserver-7.1.7/ --format=tar -v HEAD | bzip2 -9 -c > ../docker-trafficserver-build/rpmbuild/SOURCES/trafficserver-7.1.7.tar.bz2`
