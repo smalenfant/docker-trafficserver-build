@@ -29,6 +29,7 @@ To create traffic server patches, the following was executed from `https://githu
 
 - `git diff 0b7b630858b4983d077a63074776abdfa48778f8 6.2.2-astats -- plugins/ configure.ac > ../docker-trafficserver-build/rpmbuild/SOURCES/astats_over_http-1.3-6.2.x.patch`
 - `git diff 6f6a04aae105291c774d0c4116597fdc7b345121 7.1.1-astats -- plugins/ ../docker-trafficserver-build/rpmbuild/SOURCES/astats_over_http-1.3-7.1.x.patch`
+- `git diff c080cc1ec39e21b04ba28e76a6ad80927b71f798 8.1.x-astats -- plugins/ ../docker-trafficserver-build/rpmbuild/SOURCES/astats_over_http-1.5-8.1.x.patch`
 
 To create an archive of Traffic Server
 
