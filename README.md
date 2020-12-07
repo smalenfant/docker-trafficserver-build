@@ -1,6 +1,6 @@
 # docker-trafficserver-build
 
-Traffic Server doesn't work right off the box with Traffic Control. This provides a trafficserver build which incorporate astats_over_http.
+Traffic Server doesn't work out-the-box with Traffic Control. This Docker container provides a trafficserver build which incorporate astats_over_http.
 
 This is to provide some help to build Traffic Server using docker.
 
@@ -10,7 +10,7 @@ This is to provide some help to build Traffic Server using docker.
 
 `git clone https://github.com/smalenfant/docker-trafficserver-build.git`
 
-- Download the required Traffic Server version in the SOURCE directory
+- Download the required Traffic Server version (the .tar.bz2 extension) in the SOURCE directory
 
 http://archive.apache.org/dist/trafficserver/
 
