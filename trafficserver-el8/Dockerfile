@@ -1,6 +1,8 @@
 FROM centos:8
 
-RUN yum install -y --setopt=tsflags=nodocs --enablerepo=PowerTools \
+RUN dnf -y install dnf-plugins-core && yum clean all
+RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN dnf install -y --setopt=tsflags=nodocs --enablerepo=powertools \
                 git autoconf automake libtool gcc gcc-c++ \
                 pkgconfig pcre-devel tcl-devel expat-devel openssl-devel \
                 libcap python3 libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker \

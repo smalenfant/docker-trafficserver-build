@@ -12,6 +12,9 @@ This is to provide some help to build Traffic Server using docker.
 
 - Download the required Traffic Server version in the SOURCE directory
 
+- Update the SPEC files accordingly. 
+
+
 http://archive.apache.org/dist/trafficserver/
 
 - Start the build container
@@ -19,6 +22,7 @@ http://archive.apache.org/dist/trafficserver/
 ```
 CENTOS_VERSION=el6 TS_VERSION=6.2.2 docker-compose up trafficserver
 CENTOS_VERSION=el7 TS_VERSION=7.1.1 docker-compose up trafficserver
+CENTOS_VERSION=el8 TS_VERSION=8.1.2 docker-compose up trafficserver
 ```
 
 The RPMS should be in the `rpmbuild/RPMS/x86_64` 
@@ -34,3 +38,4 @@ To create traffic server patches, the following was executed from `https://githu
 To create an archive of Traffic Server
 
 - `git archive --prefix=trafficserver-7.1.7/ --format=tar -v HEAD | bzip2 -9 -c > ../docker-trafficserver-build/rpmbuild/SOURCES/trafficserver-7.1.7.tar.bz2`
+- `git rev-list HEAD --count` - Use to update the spec file
