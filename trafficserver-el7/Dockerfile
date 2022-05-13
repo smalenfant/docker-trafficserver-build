@@ -1,10 +1,11 @@
 FROM centos:7
 
+RUN yum update -y
 RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \
-                pkgconfig pcre-devel tcl-devel expat-devel openssl-devel \
+                pkgconfig pcre-devel tcl-devel expat-devel \
                 libcap libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker \
-                make centos-release-scl sudo \
+                make centos-release-scl sudo epel-release openssl-devel wget \
                 && yum clean all
 
 # Default version of GCC and Python
@@ -12,7 +13,7 @@ RUN gcc --version && python --version
 
 # Install some developer style software collections with intent to
 # use newer version of GCC and Python than the OS provided
-RUN yum install -y devtoolset-8 rh-python36 && yum clean all
+RUN yum install -y devtoolset-9 rh-python36 luajit-devel && yum clean all
 #RUN yum install -y centos-release-scl && yum install -y devtoolset-8 rh-python36
 
 # Yum installed packages but the default OS-provided version is still used.
@@ -24,7 +25,7 @@ RUN gcc --version && python --version
 #
 # See also `scl` man page for enabling multiple packages if desired:
 # https://linux.die.net/man/1/scl
-SHELL [ "/usr/bin/scl", "enable", "devtoolset-8", "rh-python36" ]
+SHELL [ "/usr/bin/scl", "enable", "devtoolset-9", "rh-python36" ]
 
 # Switching to a different shell has brought the new versions into scope.
 RUN gcc --version && python --version
@@ -42,10 +43,35 @@ RUN useradd builder -u 1000 -m -G users,wheel && \
     #mkdir /home/builder/rpm && \
     chown -R builder /home/builder
 
-USER builder
+RUN mkdir -p /opt/trafficserver/openssl
+WORKDIR /
+RUN wget https://www.openssl.org/source/openssl-1.1.1o.tar.gz
+RUN tar xvfz openssl-1.1.1o.tar.gz
+WORKDIR openssl-1.1.1o
+RUN ./config --prefix=/opt/trafficserver/openssl --openssldir=/opt/trafficserver/openssl zlib
+RUN make -j`nproc`
+RUN make install_sw
+WORKDIR ..
 
+RUN git clone https://github.com/akheron/jansson.git
+WORKDIR jansson
+RUN autoreconf -i
+RUN ./configure --disable-shared CC="gcc -fpic" --with-openssl=/opt/trafficserver/openssl
+RUN make -j`nproc`
+RUN ln -s src/.libs lib
+RUN ln -s src include
+WORKDIR ..
+
+RUN git clone https://github.com/cisco/cjose.git
+WORKDIR cjose
+RUN autoreconf -i
+RUN ./configure --with-jansson=/jansson --disable-shared CC="gcc -fpic"
+RUN make -j`nproc`
+RUN ln -s src/.libs lib
+
+
+USER builder
 WORKDIR /home/builder/rpmbuild
-#WORKDIR /
 RUN pwd
 
 ENV FLAVOR=rpmbuild OS=centos DIST=el7

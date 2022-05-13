@@ -1,19 +1,23 @@
 %global install_prefix "/opt"
 
 Name:		trafficserver
-Version:	8.1.2
-Release:	11601%{?dist}
+Version:	9.2.0
+Release:	13890%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          11601 
+Epoch:          13890
 Source0:        %{name}-%{version}-%{epoch}.tar.bz2
+%undefine _disable_source_fetch
+#Source0:        https://github.com/apache/trafficserver/archive/refs/tags/9.1.2.tar.gz
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
 Source4:        trafficserver-rsyslog.conf
-Patch:          astats_over_http-1.5-8.1.x.patch
+Patch0:         astats_over_http-1.6-9.1.x.patch
+#Patch1:         7916.patch
+#Patch2:         8589.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 Requires:       rsyslog
@@ -41,13 +45,16 @@ rm -rf %{name}-%{version}
 
 #%setup -D -n %{name} -T
 %setup
-%patch -p1
+%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
 autoreconf -vfi
 
 #%setup
 
 %build
-./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/jansson --with-cjose=/cjose
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/trafficserver/openssl/lib:/usr/local/lib
+./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/jansson --with-cjose=/cjose -with-openssl=/opt/trafficserver/openssl --disable-unwind
 make %{?_smp_mflags}
 
 %install
@@ -80,6 +87,9 @@ cp $RPM_BUILD_DIR/%{name}-%{version}/rc/trafficserver %{buildroot}/etc/init.d
 %endif
 
 mkdir -p $RPM_BUILD_ROOT%{install_prefix}/trafficserver/etc/trafficserver/snapshots
+
+mkdir -p $RPM_BUILD_ROOT/opt/trafficserver/openssl
+cp -r /opt/trafficserver/openssl/lib $RPM_BUILD_ROOT/opt/trafficserver/openssl/lib
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -141,6 +151,7 @@ fi
 %else
 /etc/init.d/trafficserver
 %endif
+/opt/trafficserver/openssl
 /opt/trafficserver/bin
 %config(noreplace) %{_sysconfdir}/sysconfig/trafficserver
 %{_sysconfdir}/rsyslog.d/trafficserver.conf
@@ -161,7 +172,7 @@ fi
 /opt/trafficserver/etc/trafficserver/trafficserver-release
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/cache.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/hosting.config
-%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/ip_allow.config
+%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/ip_allow.yaml
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/logging.yaml
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/parent.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/plugin.config
@@ -173,5 +184,5 @@ fi
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/storage.config
 #%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/update.config
 %config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/volume.config
-%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/ssl_server_name.yaml
-#%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/stats.config.xml
+%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/sni.yaml
+%config(noreplace) %attr(644,ats,ats) /opt/trafficserver/etc/trafficserver/strategies.yaml

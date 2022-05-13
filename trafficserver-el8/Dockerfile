@@ -1,11 +1,12 @@
-FROM centos:8
+#FROM centos:latest
+FROM quay.io/centos/centos:stream8
 
 RUN dnf -y install dnf-plugins-core && yum clean all
 RUN dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN dnf install -y --setopt=tsflags=nodocs --enablerepo=powertools \
                 git autoconf automake libtool gcc gcc-c++ \
                 pkgconfig pcre-devel tcl-devel expat-devel openssl-devel \
-                libcap python3 libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker \
+                libcap python3 libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker luajit-devel \
                 make sudo \
                 && yum clean all
 
