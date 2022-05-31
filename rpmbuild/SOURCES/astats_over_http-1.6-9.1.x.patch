@@ -1,3 +1,15 @@
+diff --git a/plugins/Makefile.am b/plugins/Makefile.am
+index eeee583a4..bc190a2fa 100644
+--- a/plugins/Makefile.am
++++ b/plugins/Makefile.am
+@@ -61,6 +61,7 @@ if BUILD_EXPERIMENTAL_PLUGINS
+
+ include experimental/access_control/Makefile.inc
+ include experimental/acme/Makefile.inc
++include experimental/astats_over_http/Makefile.inc
+ include experimental/cache_fill/Makefile.inc
+ include experimental/cert_reporting_tool/Makefile.inc
+ include experimental/collapsed_forwarding/Makefile.inc
 diff --git a/plugins/experimental/astats_over_http/CHANGELOG b/plugins/experimental/astats_over_http/CHANGELOG
 new file mode 100644
 index 000000000..83f9b7aa2
