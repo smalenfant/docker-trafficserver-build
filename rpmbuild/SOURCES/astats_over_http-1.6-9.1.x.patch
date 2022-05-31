@@ -1,7 +1,7 @@
 diff --git a/plugins/Makefile.am b/plugins/Makefile.am
 index eeee583a4..bc190a2fa 100644
---- a/trafficserver-9.1.2/plugins/Makefile.am
-+++ b/trafficserver-9.1.2/plugins/Makefile.am
+--- a/plugins/Makefile.am
++++ b/plugins/Makefile.am
 @@ -61,6 +61,7 @@ if BUILD_EXPERIMENTAL_PLUGINS
 
  include experimental/access_control/Makefile.inc
