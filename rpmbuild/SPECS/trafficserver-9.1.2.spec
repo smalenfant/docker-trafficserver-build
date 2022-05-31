@@ -41,9 +41,13 @@ Requires(postun): initscripts
 %description
 Apache Traffic Server for Traffic Control with astats_over_http plugin
 
-%prep
+#%prep
 
 %setup
+echo "============="
+pwd
+ls -al
+echo "============="
 %patch0 -p1
 %patch1 
 %patch2
