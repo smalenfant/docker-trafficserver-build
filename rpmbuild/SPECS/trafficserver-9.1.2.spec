@@ -42,12 +42,9 @@ Requires(postun): initscripts
 Apache Traffic Server for Traffic Control with astats_over_http plugin
 
 %prep
-rm -rf %{name}-%{version}
-#git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
 
-#%setup -D -n %{name} -T
 %setup
-%patch0 -p1
+%patch0
 %patch1 
 %patch2
 %patch3
