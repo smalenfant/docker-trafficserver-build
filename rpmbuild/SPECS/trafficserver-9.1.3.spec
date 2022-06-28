@@ -43,7 +43,7 @@ Apache Traffic Server for Traffic Control with astats_over_http plugin
 
 %prep
 %setup
-#%patch0 -p1
+%patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
 #%patch3 -p1
