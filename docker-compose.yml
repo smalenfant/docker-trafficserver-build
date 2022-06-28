@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: '3.8'
 
 services:
   trafficserver:
@@ -11,3 +11,4 @@ services:
     environment:
       - TS_VERSION=${TS_VERSION}
     command: ['rpmbuild','-bb','SPECS/trafficserver-${TS_VERSION}.spec']
+    platform: "linux/amd64"
