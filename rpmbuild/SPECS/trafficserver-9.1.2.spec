@@ -8,18 +8,18 @@ Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
 Epoch:          13475
-Source0:       %{name}-%{version}-%{epoch}.tar.bz2
+#Source0:        %{name}-%{version}-%{epoch}.tar.bz2
 %undefine _disable_source_fetch
-#Source0:        https://github.com/apache/trafficserver/archive/refs/tags/9.1.2.tar.gz
+Source0:        https://github.com/apache/trafficserver/archive/refs/tags/9.1.2.tar.gz
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
 Source4:        trafficserver-rsyslog.conf
 Patch0:         astats_over_http-1.6-9.1.x.patch
-Patch1:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/7916.patch
-Patch2:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8589.patch
-Patch3:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8362.patch
-Patch4:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8480.patch
+#Patch1:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/7916.patch
+#Patch2:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8589.patch
+#Patch3:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8362.patch
+#Patch4:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8480.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:	tcl, hwloc, pcre, openssl, libcap
 Requires:       rsyslog
@@ -42,12 +42,16 @@ Requires(postun): initscripts
 Apache Traffic Server for Traffic Control with astats_over_http plugin
 
 %prep
+rm -rf %{name}-%{version}
+#git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
+
+#%setup -D -n %{name} -T
 %setup
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+#%patch1 
+#%patch2
+#%patch3
+#%patch4
 autoreconf -vfi
 
 #%setup

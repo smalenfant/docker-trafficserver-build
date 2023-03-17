@@ -3,15 +3,15 @@
 
 Name:		trafficserver
 Version:	9.2.0
-Release:	14091%{?dist}
+Release:	14133%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          14091
-Source0:        %{name}-%{version}-%{epoch}.tar.bz2
+Epoch:          14133
+#Source0:        %{name}-%{version}-%{epoch}.tar.bz2
 %undefine _disable_source_fetch
-#Source0:        https://github.com/apache/trafficserver/archive/refs/tags/9.1.2.tar.gz
+Source0:        https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
@@ -25,7 +25,7 @@ Requires:       expat hwloc pcre xz ncurses pkgconfig
 Requires:       openssl
 Requires:       libcap, cjose, jansson
 # Require an OpenSSL which supports PROFILE=SYSTEM
-Conflicts:      openssl-libs < 1:1.0.1h-4
+#Conflicts:      openssl-libs < 1:1.0.1h-4
 Requires:       systemd
 
 #Requires:	tcl, hwloc, pcre, openssl, libcap, cjose, jansson

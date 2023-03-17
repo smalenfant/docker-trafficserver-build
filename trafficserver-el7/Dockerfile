@@ -13,7 +13,7 @@ RUN gcc --version && python --version
 
 # Install some developer style software collections with intent to
 # use newer version of GCC and Python than the OS provided
-RUN yum install -y devtoolset-9 rh-python38 luajit-devel && yum clean all
+RUN yum install -y devtoolset-9 rh-python36 luajit-devel && yum clean all
 #RUN yum install -y centos-release-scl && yum install -y devtoolset-8 rh-python36
 
 # Yum installed packages but the default OS-provided version is still used.
@@ -25,7 +25,7 @@ RUN gcc --version && python --version
 #
 # See also `scl` man page for enabling multiple packages if desired:
 # https://linux.die.net/man/1/scl
-SHELL [ "/usr/bin/scl", "enable", "devtoolset-9", "rh-python38" ]
+SHELL [ "/usr/bin/scl", "enable", "devtoolset-9", "rh-python36" ]
 
 # Switching to a different shell has brought the new versions into scope.
 RUN gcc --version && python --version
@@ -65,7 +65,7 @@ WORKDIR ..
 RUN git clone https://github.com/cisco/cjose.git
 WORKDIR cjose
 RUN autoreconf -i
-RUN ./configure --with-jansson=/jansson --disable-shared CC="gcc -fpic"
+RUN ./configure --with-openssl=/opt/trafficserver/openssl --with-jansson=/jansson --disable-shared CC="gcc -fpic"
 RUN make -j`nproc`
 RUN ln -s src/.libs lib
 
