@@ -2,19 +2,20 @@
 
 Name:		trafficserver
 Version:	9.2.0
-Release:	13537%{?dist}
+Release:	14133%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          13537
-#Source0:        %{name}-%{version}-%{epoch}.tar.bz2
-%undefine _disable_source_fetch
-Source0:        https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
+Epoch:          14133
+Source0:        %{name}-%{version}-%{epoch}.tar.bz2
+#%undefine _disable_source_fetch
+#Source0:        https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
 Source4:        trafficserver-rsyslog.conf
+patch0:         9.2.0-load-failed-ssl.patch
 #Patch0:         astats_over_http-1.6-9.1.x.patch
 #Patch1:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/7916.patch
 #Patch2:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8589.patch
@@ -39,17 +40,10 @@ BuildRequires:  systemd-rpm-macros
 BuildRequires:  openssl-devel
 BuildRequires:  cjose-devel, jansson-devel
 
-Requires: initscripts
-%if %{?fedora}0 > 140 || %{?rhel}0 > 60
 # For systemd.macros
 BuildRequires: systemd
 Requires: systemd
 Requires(postun): systemd
-%else
-Requires(post): chkconfig
-Requires(preun): chkconfig initscripts
-Requires(postun): initscripts
-%endif
 
 %description
 Apache Traffic Server for Traffic Control with astats_over_http plugin
@@ -59,7 +53,7 @@ rm -rf %{name}-%{version}
 #git clone -b %{version} https://github.com/apache/trafficserver.git %{name}-%{version}
 
 #%setup -D -n %{name} -T
-%autosetup
+%autosetup -p1
 #%setup
 #%patch0 -p1
 #%patch1 
