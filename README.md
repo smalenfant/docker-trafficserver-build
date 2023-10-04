@@ -23,6 +23,7 @@ http://archive.apache.org/dist/trafficserver/
 CENTOS_VERSION=el6 TS_VERSION=6.2.2 docker-compose up trafficserver
 CENTOS_VERSION=el7 TS_VERSION=7.1.1 docker-compose up trafficserver
 CENTOS_VERSION=el8 TS_VERSION=8.1.2 docker-compose up trafficserver
+CENTOS_VERSION=el9 TS_VERSION=9.2.0 docker-compose up trafficserver
 ```
 
 The RPMS should be in the `rpmbuild/RPMS/x86_64` 

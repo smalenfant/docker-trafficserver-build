@@ -5,7 +5,7 @@ RUN yum install -y --setopt=tsflags=nodocs \
                 install git autoconf automake libtool gcc gcc-c++ \
                 pkgconfig pcre-devel tcl-devel expat-devel \
                 libcap libcap-devel hwloc hwloc-devel libcurl-devel rpm-build perl-ExtUtils-MakeMaker \
-                make centos-release-scl sudo epel-release openssl-devel wget \
+                make centos-release-scl sudo epel-release wget \
                 && yum clean all
 
 # Default version of GCC and Python
@@ -15,6 +15,9 @@ RUN gcc --version && python --version
 # use newer version of GCC and Python than the OS provided
 RUN yum install -y devtoolset-9 rh-python36 luajit-devel && yum clean all
 #RUN yum install -y centos-release-scl && yum install -y devtoolset-8 rh-python36
+
+RUN yum install -y ncurses-devel xz-devel brotli-devel openssl-devel && yum clean all
+RUN yum install -y python3 systemd-rpm-macros perl-IPC-Cmd && yum clean all 
 
 # Yum installed packages but the default OS-provided version is still used.
 RUN gcc --version && python --version
@@ -43,12 +46,16 @@ RUN useradd builder -u 1000 -m -G users,wheel && \
     #mkdir /home/builder/rpm && \
     chown -R builder /home/builder
 
+ENV OPENSSL_VERSION="openssl-3.1.3"
+# RUN mkdir -p /usr/local/openssl
 RUN mkdir -p /opt/trafficserver/openssl
 WORKDIR /
-RUN wget https://www.openssl.org/source/openssl-1.1.1o.tar.gz
-RUN tar xvfz openssl-1.1.1o.tar.gz
-WORKDIR openssl-1.1.1o
+RUN wget https://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz
+RUN tar xvfz ${OPENSSL_VERSION}.tar.gz
+WORKDIR ${OPENSSL_VERSION}
 RUN ./config --prefix=/opt/trafficserver/openssl --openssldir=/opt/trafficserver/openssl zlib
+# RUN ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl zlib
+
 RUN make -j`nproc`
 RUN make install_sw
 WORKDIR ..
@@ -57,15 +64,20 @@ RUN git clone https://github.com/akheron/jansson.git
 WORKDIR jansson
 RUN autoreconf -i
 RUN ./configure --disable-shared CC="gcc -fpic" --with-openssl=/opt/trafficserver/openssl
+# RUN ./configure --disable-shared CC="gcc -fpic" --with-openssl=/usr/local/openssl
 RUN make -j`nproc`
 RUN ln -s src/.libs lib
 RUN ln -s src include
 WORKDIR ..
 
-RUN git clone https://github.com/cisco/cjose.git
+# RUN git clone https://github.com/cisco/cjose.git
+# RUN wget https://github.com/OpenIDC/cjose/releases/tag/v0.6.2.2
+# RUN wget https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
+RUN git clone -b v0.6.2.2 https://github.com/OpenIDC/cjose.git
 WORKDIR cjose
 RUN autoreconf -i
 RUN ./configure --with-openssl=/opt/trafficserver/openssl --with-jansson=/jansson --disable-shared CC="gcc -fpic"
+# RUN ./configure --with-openssl=/usr/local/openssl --with-jansson=/jansson --disable-shared CC="gcc -fpic"
 RUN make -j`nproc`
 RUN ln -s src/.libs lib
 

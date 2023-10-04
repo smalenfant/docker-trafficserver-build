@@ -2,7 +2,7 @@
 
 Name:		trafficserver
 Version:	8.1.2
-Release:	11601%{?dist}
+Release:	11602%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
@@ -47,7 +47,8 @@ autoreconf -vfi
 #%setup
 
 %build
-./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/jansson --with-cjose=/cjose
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/trafficserver/openssl/lib:/usr/local/lib
+./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/jansson --with-cjose=/cjose --with-openssl=/opt/trafficserver/openssl
 make %{?_smp_mflags}
 
 %install

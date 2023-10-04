@@ -1,21 +1,21 @@
 %global install_prefix "/opt"
 
 Name:		trafficserver
-Version:	9.2.0
-Release:	14133%{?dist}
+Version:	9.2.2
+Release:	14194%{?dist}
 Summary:	Apache Traffic Server
 Group:		Applications/Communications
 License:	Apache License, Version 2.0
 URL:		https://github.com/apache/trafficserver
-Epoch:          14133
-Source0:        %{name}-%{version}-%{epoch}.tar.bz2
-#%undefine _disable_source_fetch
-#Source0:        https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
+Epoch:          14194
+# Source0:        %{name}-%{version}-%{epoch}.tar.bz2
+%undefine _disable_source_fetch
+Source0:        https://github.com/apache/trafficserver/archive/refs/tags/%{version}.tar.gz
 #Source1:        trafficserver.service
 Source2:        trafficserver.sysconfig
 Source3:        trafficserver.tmpfilesd
 Source4:        trafficserver-rsyslog.conf
-patch0:         9.2.0-load-failed-ssl.patch
+#patch0:         9579.patch
 #Patch0:         astats_over_http-1.6-9.1.x.patch
 #Patch1:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/7916.patch
 #Patch2:         https://patch-diff.githubusercontent.com/raw/apache/trafficserver/pull/8589.patch
@@ -24,11 +24,11 @@ patch0:         9.2.0-load-failed-ssl.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 Requires:       expat hwloc pcre xz ncurses pkgconfig
-Requires:       openssl
-Requires:       libcap, cjose, jansson
 # Require an OpenSSL which supports PROFILE=SYSTEM
 #Conflicts:      openssl-libs < 1:1.0.1h-4
 Requires:       systemd
+Requires:       openssl
+Requires:       libcap
 
 
 BuildRequires:  expat-devel hwloc-devel pcre-devel zlib-devel xz-devel brotli-devel
@@ -38,7 +38,16 @@ BuildRequires:  automake libtool
 BuildRequires:  libcap-devel
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  openssl-devel
+
+%if %{rhel} == 7
+#Requires:       openssl11
+#BuildRequires:  openssl11-devel
+%endif
+
+%if %{rhel} > 7
+Requires:       cjose, jansson
 BuildRequires:  cjose-devel, jansson-devel
+%endif
 
 # For systemd.macros
 BuildRequires: systemd
@@ -65,8 +74,16 @@ autoreconf -vfi
 #%setup
 
 %build
-#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/trafficserver/openssl/lib:/usr/local/lib
+
+%if %{rhel} > 7
 ./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/usr/lib64 --with-cjose=/usr/lib64 --disable-unwind
+%endif
+
+%if %{rhel} == 7
+./configure --prefix=%{install_prefix}/%{name} --with-user=ats --with-group=ats --with-build-number=%{release} --enable-experimental-plugins --with-jansson=/jansson --with-cjose=/cjose --with-openssl=/opt/trafficserver/openssl --disable-unwind
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/trafficserver/openssl/lib64:/usr/local/lib
+%endif
+
 make %{?_smp_mflags}
 
 %install
@@ -100,8 +117,10 @@ cp $RPM_BUILD_DIR/%{name}-%{version}/rc/trafficserver %{buildroot}/etc/init.d
 
 mkdir -p $RPM_BUILD_ROOT%{install_prefix}/trafficserver/etc/trafficserver/snapshots
 
-#mkdir -p $RPM_BUILD_ROOT/opt/trafficserver/openssl
-#cp -r /opt/trafficserver/openssl/lib $RPM_BUILD_ROOT/opt/trafficserver/openssl/lib
+%if %{rhel} == 7
+mkdir -p $RPM_BUILD_ROOT/opt/trafficserver/openssl
+cp -r /opt/trafficserver/openssl/lib64 $RPM_BUILD_ROOT/opt/trafficserver/openssl/lib64
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -163,7 +182,9 @@ fi
 %else
 /etc/init.d/trafficserver
 %endif
-#/opt/trafficserver/openssl
+%if %{rhel} == 7
+/opt/trafficserver/openssl
+%endif
 /opt/trafficserver/bin
 %config(noreplace) %{_sysconfdir}/sysconfig/trafficserver
 %{_sysconfdir}/rsyslog.d/trafficserver.conf
